@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/stylesheet.css">
+        <script src="js/options.js" type="module"></script>
+        <title>Options | OneMark Extension</title>
+    </head>
+    <body>
+        <header>
+            <h1><img src="images/logo-48.png">OneMark Add-On</h1>
+        </header>
+        <main>
+            <section class="sec-row">
+                <div class="sec-col center">
+                    <h2 class="sec-header">Add Account</h2>
+                    <form id="login-form" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="error-label invisible" id="login-username-error">Error</label>
+                            <input type="text" placeholder="Username" name="username" id="login-username" data-listener="errorCheck" required>
+                            <label for="login-username" class="lb-title">Username</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="error-label invisible" id="login-password-error">Error</label>
+                            <input type="password" placeholder="Password" name="password" id="login-password" data-listener="errorCheck" required>
+                            <label for="login-password" class="lb-title">Password</label>
+                        </div>
+                        <label class="checkbox-ctn">
+                            <input type="checkbox" name="incognito" id="incognito">
+                            <span class="checkbox"></span>
+                            <label for="incognito" class="lb-title checkbox-title">Use Account for Incognito</label>
+                        </label>
+                        <button type="submit" class="btn-hollow" id="login" name="login">ADD ACCOUNT</button>
+                    </form>
+                </div>
+                <div class="sec-col">
+                    <h2 class="sec-header center">Accounts</h2>
+                    <div class="mg-center">
+                        <h4>Standard</h4>
+                        <div class="acc">
+                            <p id="acc-standard">No account set</p>
+                            <span class="inline-x" data-listener="logout" data-acc="standard">&times;</span>
+                        </div>
+                        <h4>Incognito</h4>
+                        <div class="acc">
+                            <p id="acc-incognito">No account set</p>
+                            <span class="inline-x" data-listener="logout" data-acc="incognito">&times;</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h2 class="sec-header">Settings</h2>
+                <div id="settings" class="mg-center fit">
+                    <label id="setting-incognito" class="checkbox-ctn">
+                        <input type="checkbox" id="incognito-enabled" checked disabled>
+                        <span class="checkbox"></span>
+                        <label class="lb-title checkbox-title">Extension Enabled in Incognito (<i>Option Controlled via <a href="#" id="redir-incognito">Extensions</a> Page</i>)</label>
+                    </label>
+                    <label id="setting-context" class="checkbox-ctn">
+                        <input type="checkbox" id="context-enabled" data-listener="toggle" data-setting="EnableContext" checked>
+                        <span class="checkbox"></span>
+                        <label class="lb-title checkbox-title">Enable context-menu</label>
+                    </label>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
