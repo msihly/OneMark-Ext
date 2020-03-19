@@ -156,7 +156,8 @@ export function checkErrors(elements) {
 
 /******************************* BOOKMARKS *******************************/
 export async function createBookmark({isContext = false, tags = [], imageBlob = null}) {
-    if (event) { event.preventDefault(); }
+    var e = event;
+    if (e) { e.preventDefault(); }
 
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         var isIncognito = tabs[0].incognito;
@@ -170,8 +171,8 @@ export async function createBookmark({isContext = false, tags = [], imageBlob = 
                 uploadBookmark(formData, isIncognito);
             });
         } else {
-            if (!checkErrors([...event.target.elements])) { return toast("Error: Bookmark Creation", "Errors in form fields", "error"); }
-            let formData = new FormData(event.target);
+            if (!checkErrors([...e.target.elements])) { return toast("Error: Bookmark Creation", "Errors in form fields", "error"); }
+            let formData = new FormData(e.target);
             formData.append("tags", JSON.stringify(tags));
             formData.append("imageURL", imageBlob, `${formData.get("title")}.jpg`);
             uploadBookmark(formData, isIncognito);
@@ -193,5 +194,19 @@ export async function uploadBookmark(formData, isIncognito) {
         })).json();
 
         response.Success ? toast("Success: Bookmark Creation", response.BookmarkInfo.Title, "success") : toast("Error: Bookmark Creation", response.Message, "error");
+    });
+}
+
+/******************************* OPTIONS *******************************/
+export function toggleSetting() {
+    var setting = this.dataset.setting;
+    chrome.storage.sync.get([setting], function(stored) {
+        chrome.storage.sync.set({[setting]: (stored[setting] ? false : true)}, () => toggleSettings([setting]));
+    });
+}
+
+export function toggleSettings(settings) {
+    chrome.storage.sync.get(settings, function(stored) {
+        stored.EnableContext ? chrome.contextMenus.create({id: "createBookmark", title: "Create Bookmark"}) : chrome.contextMenus.remove("createBookmark");
     });
 }

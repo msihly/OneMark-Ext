@@ -15,7 +15,7 @@ const eventListeners = [{
     }, {
         "dataListener": "toggle",
         "eventType": "click",
-        "function": toggleSetting
+        "function": Common.toggleSetting
     }];
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -64,11 +64,4 @@ function redirExtPage(event, inlineNode) {
     event.preventDefault();
     Common.insertInlineMessage("after", inlineNode, "Redirecting to extension page...", {type: "info", duration: 2000});
     setTimeout(function() {chrome.tabs.create({url: `chrome://extensions/?id=${chrome.runtime.id}`})}, 2000);
-}
-
-function toggleSetting() {
-    var setting = this.dataset.setting;
-    chrome.storage.sync.get([setting], function(stored) {
-        chrome.storage.sync.set({[setting]: (stored[setting] ? false : true)});
-    });
 }

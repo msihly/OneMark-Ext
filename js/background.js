@@ -1,11 +1,7 @@
 import * as Common from "./modules/common.js";
 
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.get(["EnableContext"], function(stored) {
-        if (stored.EnableContext) {
-            chrome.contextMenus.create({id: "createBookmark", title: "Create Bookmark"});
-        }
-    });
+chrome.runtime.onInstalled.addListener(function(details) {
+    if (details.reason == "install") { chrome.storage.sync.set({"EnableContext": true}, () => Common.toggleSettings(["EnableContext"])); }
 });
 
 chrome.contextMenus.onClicked.addListener(function(info) {
