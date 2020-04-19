@@ -3,6 +3,8 @@
 
 ---
 # Changelog
+## Version 1.03 &nbsp;-&nbsp; (2020-04-18)
+* Added context-menu item to browser-action popup to link to the OneMark website
 
 ## Version 1.02 &nbsp;-&nbsp; (2020-03-19)
 * Updated `onInstalled` listener in `background.js`
