@@ -1,67 +1,59 @@
-import * as Common from "./modules/common.js";
+import * as Cmn from "./modules/common.js";
 
-const eventListeners = [
-    {
-        "id": "tag-search",
-        "eventType": "input",
-        "function": searchTags,
-        "debounce": 50
-    }, {
-        "id": "tag-btn",
-        "eventType": "click",
-        "function": updateTag
-    }, {
-        "id": "preview",
-        "eventType": "click",
-        "function": openBookmark
-    }, {
-        "id": "bk-f",
-        "eventType": "submit",
-        "function": function() { Common.createBookmark({"tags": PopGlobals.tags, "imageBlob": PopGlobals.imageBlob}); }
-    }, {
-        "dataListener": "inputPreview",
-        "eventType": "input",
-        "function": inputPreview
-    }, {
-        "dataListener": "errorCheck",
-        "eventType": "input",
-        "function": Common.errorCheck
-    }
-];
-
-var PopGlobals = {
+const PopG = {
+    bookmarks: [],
+    eventListeners: [{
+            "id": "bk-f",
+            "eventType": "submit",
+            "function": () => Cmn.createBookmark({"tags": PopG.tags, "imageBlob": PopG.imageBlob})
+        }, {
+            "id": "preview",
+            "eventType": "click",
+            "function": openBookmark
+        }, {
+            "id": "tag-btn",
+            "eventType": "click",
+            "function": updateTag
+        }, {
+            "id": "tag-search",
+            "eventType": "input",
+            "function": searchTags,
+            "debounce": 50
+        }, {
+            "dataListener": "errorCheck",
+            "eventType": "input",
+            "function": Cmn.errorCheck
+        }, {
+            "dataListener": "inputPreview",
+            "eventType": "input",
+            "function": inputPreview
+        }],
     imageBlob: null,
-    inputUrl: "",
     inputTitle: "",
-    tagSearch: "",
-    tagsCtn: "",
+    inputUrl: "",
     tags: [],
-    bookmarks: []
+    tagsCtn: "",
+    tagSearch: ""
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    Common.addListeners(eventListeners);
+    Cmn.addListeners(PopG.eventListeners);
 
-    PopGlobals.inputUrl = document.getElementById("bk-f-url");
-    PopGlobals.inputTitle = document.getElementById("bk-f-title");
-    PopGlobals.tagSearch = document.getElementById("tag-search");
-    PopGlobals.tagsCtn = document.getElementById("tags");
+    PopG.inputUrl = document.getElementById("bk-f-url");
+    PopG.inputTitle = document.getElementById("bk-f-title");
+    PopG.tagSearch = document.getElementById("tag-search");
+    PopG.tagsCtn = document.getElementById("tags");
 
-    fillForm(PopGlobals.inputUrl, PopGlobals.inputTitle, true);
+    fillForm(PopG.inputUrl, PopG.inputTitle, true);
 });
-
-/******************************* GENERAL *******************************/
-function regexEscape(string) {
-    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-}
 
 /******************************* FORM *******************************/
 function fillForm(inputUrl, inputTitle, withImage) {
-    var [previewURL, previewTitle, previewImage] = document.querySelectorAll("#preview, #preview-title, #preview-image");
+    let [previewURL, previewTitle, previewImage] = document.querySelectorAll("#preview, #preview-title, #preview-image");
 
     if (withImage) {
         chrome.tabs.captureVisibleTab({quality: 80}, async function(dataUrl) {
-            PopGlobals.imageBlob = await (await fetch(dataUrl)).blob();
+            PopG.imageBlob = await (await fetch(dataUrl)).blob();
             previewImage.src = dataUrl;
         });
     } else { previewImage.src = "images/No-Image.jpg"; }
@@ -75,20 +67,20 @@ function fillForm(inputUrl, inputTitle, withImage) {
 }
 
 function inputPreview() {
-    var preview = document.getElementById(this.dataset.preview);
-    if (this.dataset.attr == "innerHTML") { preview.innerHTML = Common.isValid(this).Valid ? this.value : this.dataset.invalidValue; }
-    else { preview.setAttribute(this.dataset.attr, Common.isValid(this).Valid ? this.value : this.dataset.invalidValue); }
+    let preview = document.getElementById(this.dataset.preview);
+    if (this.dataset.attr == "innerHTML") { preview.innerHTML = Cmn.isValid(this).Valid ? this.value : this.dataset.invalidValue; }
+    else { preview.setAttribute(this.dataset.attr, Cmn.isValid(this).Valid ? this.value : this.dataset.invalidValue); }
 }
 
 /******************************* TAGS *******************************/
 function createTag(tagText, tagsCtn) {
-    var tag = `<div class="tag" id="tag-${tagText}">
+    let tag = `<div class="tag" id="tag-${tagText}">
                     <div class="tag-text">${tagText}</div>
                     <span id="tagx-${tagText}" class="tag-x" data-form="${tagsCtn.id.substring(0, tagsCtn.id.indexOf("-"))}">×</span>
                 </div>`;
     tagsCtn.insertAdjacentHTML("afterbegin", tag);
 
-    var tagX = document.getElementById(`tagx-${tagText}`);
+    let tagX = document.getElementById(`tagx-${tagText}`);
     tagX.addEventListener("click", function() {
         let tagBtn = document.getElementById("tag-btn");
         tagBtn.classList.remove("del");
@@ -97,28 +89,27 @@ function createTag(tagText, tagsCtn) {
     });
 }
 
+function displayTags(arr, hide = true) {
+    arr.forEach(e => {
+        let tag = document.getElementById(`tag-${e}`).classList;
+        hide == true ? tag.add("hidden") : tag.remove("hidden");
+    });
+}
+
 function removeTag(tagText) {
-    var tag = document.getElementById(`tag-${tagText}`);
+    let tag = document.getElementById(`tag-${tagText}`);
     tag.remove();
-    PopGlobals.tags = PopGlobals.tags.filter(e => e !== tagText);
-}
-
-function hideTags(arr) {
-    arr.forEach(function(e) { document.getElementById(`tag-${e}`).classList.add("hidden"); });
-}
-
-function showTags(arr) {
-    arr.forEach(function(e) { document.getElementById(`tag-${e}`).classList.remove("hidden"); });
+    PopG.tags = PopG.tags.filter(e => e !== tagText);
 }
 
 function searchTags() {
-    var tagBtn = document.getElementById("tag-btn");
+    let tagBtn = document.getElementById("tag-btn");
     if (this.value.length > 0) {
-        var reTag = new RegExp(regexEscape(this.value), "i"),
-            tagsActive = PopGlobals.tags.filter(e => { return reTag.test(e); });
-        hideTags(PopGlobals.tags);
-        showTags(tagsActive);
-        if (PopGlobals.tags.includes(this.value)) {
+        let reTag = new RegExp(Cmn.regexEscape(this.value), "i"),
+            tagsActive = PopG.tags.filter(e => { return reTag.test(e); });
+        displayTags(PopG.tags, false);
+        displayTags(tagsActive);
+        if (PopG.tags.includes(this.value)) {
             tagBtn.classList.remove("add");
             tagBtn.classList.add("del");
         } else {
@@ -126,17 +117,18 @@ function searchTags() {
             tagBtn.classList.add("add");
         }
     } else {
-        showTags(PopGlobals.tags);
+        displayTags(PopG.tags);
         tagBtn.classList.remove("del", "add");
     }
 }
 
+
 function updateTag() {
-    var input = PopGlobals.tagSearch,
+    let input = PopG.tagSearch,
         tagText = input.value;
     if (this.classList.contains("add")) {
-        PopGlobals.tags.push(tagText);
-        createTag(tagText, PopGlobals.tagsCtn);
+        PopG.tags.push(tagText);
+        createTag(tagText, PopG.tagsCtn);
         input.value = "";
         this.classList.remove("add");
     } else if (this.classList.contains("del")) {
@@ -148,6 +140,6 @@ function updateTag() {
 
 /******************************* BOOKMARKS *******************************/
 function openBookmark() {
-    var href = this.dataset.href;
+    let href = this.dataset.href;
     if (href && href != "#") { window.open(href); }
 }

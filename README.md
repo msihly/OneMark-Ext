@@ -3,6 +3,19 @@
 
 ---
 # Changelog
+## Version 1.04 &nbsp;-&nbsp; (2020-05-22)
+* Updated all JavaScript files to use ES6 consistently, cleanup functions and global scope, and extract common functions
+    * Functions and object properties reordered lexicographically
+    * Global variables all placed into single file-specific global `const`
+    * Replaced all uses of `var` keyword with `let` and `const`
+    * Shortened frequently used and unncessarily long variable names while expanding more specific names to make their purpose clearer
+* Fixed initialization of context-menus
+    * Created a wrapper function `toggleContext(...)` in `common.js` to prevent attempts at duplicate creation and removal of non-existing menus
+    * Created context-menus now stored in Chrome sync storage for tracking
+    * Default menus properly created on installation
+    * Menus are removed and reinitiliazed in 'onInstalled' event listener
+* Removed `toggleSettings(...)` function and merged functionality with `toggleSetting(...)`
+
 ## Version 1.03 &nbsp;-&nbsp; (2020-04-18)
 * Added context-menu item to browser-action popup to link to the OneMark website
 

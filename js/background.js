@@ -1,14 +1,23 @@
-import * as Common from "./modules/common.js";
+import * as Cmn from "./modules/common.js";
 
-chrome.runtime.onInstalled.addListener(function(details) {
-    if (details.reason == "install") { chrome.storage.sync.set({"EnableContext": true}, () => Common.toggleSettings(["EnableContext"])); }
+chrome.runtime.onInstalled.addListener(details => {
+    chrome.storage.sync.get(["EnableContext", "ContextMenus"], stored => {
+        let defaults = {
+            enableContext: stored.EnableContext === undefined ? true : stored.EnableContext,
+            contextMenus: stored.ContextMenus === undefined ? [] : stored.ContextMenus
+        }
+        chrome.storage.sync.set({"EnableContext": defaults.enableContext, "ContextMenus": defaults.contextMenus}, () => {
+            chrome.contextMenus.removeAll(() => {
+                defaults.contextMenus.forEach(e => chrome.contextMenus.create({id: e.id, title: e.title}))
+            });
+        });
+        if (details.reason == "install") { chrome.contextMenus.create({id: "openOnemark", title: "Open OneMark", contexts: ["browser_action"]}); }
+    });
 });
 
-chrome.contextMenus.create({id: "openOnemark", title: "Open OneMark", contexts: ["browser_action"]});
-
-chrome.contextMenus.onClicked.addListener(function(info) {
+chrome.contextMenus.onClicked.addListener(info => {
     switch (info.menuItemId) {
-        case "createBookmark": Common.createBookmark({isContext: true}); break;
+        case "createBookmark": Cmn.createBookmark({isContext: true}); break;
         case "openOnemark": chrome.tabs.create({url: "https://onemark.herokuapp.com"}); break;
     }
 });

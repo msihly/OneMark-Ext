@@ -1,26 +1,11 @@
+const CmnG = {
+    months: ["", "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."],
+    toasts: []
+}
+
 /******************************* GENERAL *******************************/
-export function capitalize(string) {
-    return string[0].toUpperCase() + string.substring(1);
-}
-
-export function getRandomInt(min, max, cur) {
-    var num = Math.floor(Math.random() * (max - min + 1)) + min;
-    return (num === cur) ? getRandomInt(min, max, cur) : num;
-}
-
-export function debounce(fn, delay) {
-    var timeout;
-    return function(...args) {
-        if (timeout) { clearTimeout(timeout); }
-        timeout = setTimeout(() => {
-            fn(...args);
-            timeout = null;
-        }, delay);
-    }
-}
-
 export function addListeners(data) {
-	var errors = [];
+	let errors = [];
     data.forEach(d => {
         let elements, errMsg;
         if (d.id) {
@@ -35,14 +20,49 @@ export function addListeners(data) {
         } else if (d.domObject) {
             elements = [d.domObject];
         }
-        if (elements.length > 0) { elements.forEach(e => e.addEventListener(d.eventType, !d.debounce ? d.function : debounce(d.function.bind(e), d.debounce))); }
+        if (elements.length > 0 && elements[0] !== null) {elements.forEach(e => e.addEventListener(d.eventType, !d.debounce ? d.function : debounce(d.function.bind(e), d.debounce))); }
         else { errors.push(errMsg); }
     });
 	if (errors.length > 0) { console.log(errors); }
 }
 
-export function toast(title, message, type) {
-    var opt = {
+export function capitalize(string) {
+    return string[0].toUpperCase() + string.substring(1);
+}
+
+export function checkEmpty(arr) {
+    if (arr == undefined) { return console.error("Undefined reference passed to 'checkEmpty(arr)' function"); }
+    return arr.length < 1 ? true : false;
+}
+
+export function debounce(fn, delay) {
+    let timeout;
+    return function(...args) {
+        if (timeout) { clearTimeout(timeout); }
+        timeout = setTimeout(() => {
+            fn(...args);
+            timeout = null;
+        }, delay);
+    }
+}
+
+export function getRandomInt(min, max, cur = null) {
+    let num = Math.floor(Math.random() * (max - min + 1)) + min;
+    return (num === cur) ? getRandomInt(min, max, cur) : num;
+}
+
+export function printDate(dateTime, type = "date") {
+    let [year, month, day, time] = [dateTime.substring(0, 4), dateTime.substring(5, 7), dateTime.substring(8, 10), dateTime.substring(11)];
+    switch (type) {
+        case "date": return `${CmnG.months[+month]} ${day}, ${year}`;
+        case "dateTime": return `${CmnG.months[+month]} ${day}, ${year} | ${new Date(`1970-01-01T${time}`).toLocaleTimeString({}, {hour: "numeric", minute: "numeric"})}`;
+        case "time": return new Date(`1970-01-01T${time}`).toLocaleTimeString({}, {hour: "numeric", minute: "numeric"});
+    }
+}
+
+/******************************* NOTIFICATIONS *******************************/
+export function toast(title, message) {
+    let opt = {
         type: "basic",
         title: title,
         message: String(message),
@@ -55,9 +75,9 @@ export function toast(title, message, type) {
     });
 }
 
-export function insertInlineMessage(position, refNode, text, options = [{"type": "", "duration": 0}]) {
-    var refNode = document.getElementById(refNode),
-        parentNode = refNode.parentElement,
+export function inlineMessage(position, refNode, text, options = [{"type": "", "duration": 0}]) {
+    refNode = document.getElementById(refNode);
+    let parentNode = refNode.parentElement,
         tempID = (`${parentNode.id}-${refNode.id}`).replace(/[#.]/g, ""),
         prevNode = document.getElementById(tempID),
         msgNode = document.createElement("div");
@@ -69,10 +89,10 @@ export function insertInlineMessage(position, refNode, text, options = [{"type":
     if (prevNode) { prevNode.remove(); }
 
     switch (options.type) {
-        case "info": msgNode.classList.add("bg-blue"); break;
-        case "success": msgNode.classList.add("bg-green"); break;
-        case "error": msgNode.classList.add("bg-red"); break;
-        case "warning": msgNode.classList.add("bg-orange"); break;
+        case "info": case "blue": msgNode.classList.add("bg-blue"); break;
+        case "success": case "green": msgNode.classList.add("bg-green"); break;
+        case "error": case "red": msgNode.classList.add("bg-red"); break;
+        case "warning": case "orange": msgNode.classList.add("bg-orange"); break;
     }
 
     switch (position) {
@@ -86,52 +106,17 @@ export function insertInlineMessage(position, refNode, text, options = [{"type":
 }
 
 /******************************* FORM *******************************/
-export function isValid(element) {
-    var validity = {"Valid": false, "Message": ""};
-    switch (element.name) {
-        case "title": case "pageURL": case "email": case "username": case "password": case "password-confirm":
-            if (!element.value) { validity.Message = "Field is required"; return validity; }
-    }
-    switch (element.name) {
-        case "title":
-            if (element.value.length > 255) { validity.Message = "Title cannot be more than 255 characters"; return validity; }
-            break;
-        case "pageURL":
-            var re = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
-            if (element.value.length > 2083) { validity.Message = "Page URL cannot be more than 2083 characters"; return validity; }
-            else if (!re.test(element.value)) { validity.Message = "Invalid URL"; return validity; }
-            break;
-        case "email":
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            if (element.value.length > 255) { validity.Message = "Email cannot be more than 255 characters"; return validity; }
-            else if (!re.test(element.value)) { validity.Message = "Invalid email"; return validity; }
-            break;
-        case "username":
-            if (element.value.length > 40) { validity.Message = "Username cannot be more than 40 characters"; return validity; }
-            break;
-        case "password":
-        case "password-new":
-            if (element.value.length < 8) { validity.Message = "Password must be a minimum of 8 characters"; return validity; }
-            var passConf = document.getElementById(`${element.id}-confirm`);
-            if (passConf) { errorCheck.call(passConf); }
-            if (element.id == "pass-new") {
-                var passCur = document.getElementById("pass-cur");
-                if (element.value === passCur.value) { validity.Message = "New password cannot match current password"; return validity; }
-            }
-            break;
-        case "password-confirm":
-            var pass = document.getElementById(element.id.substring(0, element.id.indexOf("-confirm")));
-            if (element.value !== pass.value) { validity.Message = "Passwords do not match"; return validity; }
-            break;
-    }
-    return {"Valid": true, "Message": "Field is valid"};
+export function checkErrors(elements) {
+    let errors = [];
+    elements.forEach(e => { if (e.type != "submit") { errors.push(errorCheck.call(e)); } });
+    return !errors.includes(false);
 }
 
 export function errorCheck() {
-    var label = document.getElementById(`${this.id}-error`),
+    let label = document.getElementById(`${this.id}-error`),
         validity = isValid(this);
 
-    if(label === null) { return; }
+    if (label === null) { return; }
     if (!validity.Valid) {
         this.classList.add("invalid");
         label.innerHTML = validity.Message;
@@ -145,22 +130,55 @@ export function errorCheck() {
     return validity.Valid;
 }
 
-export function checkErrors(elements) {
-    var errors = [];
-    elements.forEach(e => {
-        if (e.type != "submit") { errors.push(errorCheck.call(e)); }
-    });
-    if (errors.includes(false)) { return false; }
-    else { return true; }
+export function isValid(element) {
+    let re,
+        validity = {"Valid": false, "Message": ""};
+    switch (element.name) {
+        case "title": case "pageURL": case "email": case "username": case "password": case "password-confirm":
+            if (!element.value) { validity.Message = "Field is required"; return validity; }
+    }
+    switch (element.name) {
+        case "title":
+            if (element.value.length > 255) { validity.Message = "Title cannot be more than 255 characters"; return validity; }
+            break;
+        case "pageURL":
+            re = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
+            if (element.value.length > 2083) { validity.Message = "Page URL cannot be more than 2083 characters"; return validity; }
+            else if (!re.test(element.value)) { validity.Message = "Invalid URL"; return validity; }
+            break;
+        case "email":
+            re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (element.value.length > 255) { validity.Message = "Email cannot be more than 255 characters"; return validity; }
+            else if (!re.test(element.value)) { validity.Message = "Invalid email"; return validity; }
+            break;
+        case "username":
+            if (element.value.length > 40) { validity.Message = "Username cannot be more than 40 characters"; return validity; }
+            break;
+        case "password":
+        case "password-new":
+            if (element.value.length < 8) { validity.Message = "Password must be a minimum of 8 characters"; return validity; }
+            let passConf = document.getElementById(`${element.id}-confirm`);
+            if (passConf) { errorCheck.call(passConf); }
+            if (element.id == "pass-new") {
+                let passCur = document.getElementById("pass-cur");
+                if (element.value === passCur.value) { validity.Message = "New password cannot match current password"; return validity; }
+            }
+            break;
+        case "password-confirm":
+            let pass = document.getElementById(element.id.substring(0, element.id.indexOf("-confirm")));
+            if (element.value !== pass.value) { validity.Message = "Passwords do not match"; return validity; }
+            break;
+    }
+    return {"Valid": true, "Message": "Field is valid"};
 }
 
 /******************************* BOOKMARKS *******************************/
 export async function createBookmark({isContext = false, tags = [], imageBlob = null}) {
-    var e = event;
+    let e = event;
     if (e) { e.preventDefault(); }
 
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-        var isIncognito = tabs[0].incognito;
+        let isIncognito = tabs[0].incognito;
 
         if (isContext) {
             let formData = new FormData();
@@ -182,31 +200,45 @@ export async function createBookmark({isContext = false, tags = [], imageBlob = 
 
 export async function uploadBookmark(formData, isIncognito) {
     chrome.storage.sync.get(["StandardAuthToken", "IncognitoAuthToken"], async function(stored) {
-        var token = isIncognito ? stored.IncognitoAuthToken : stored.StandardAuthToken;
+        let token = isIncognito ? stored.IncognitoAuthToken : stored.StandardAuthToken;
         if (!token) { return toast("Error: Authentication", `No account set for ${isIncognito ? "Incognito" : "Standard"} browsing`, "error"); }
 
-        var response = await (await fetch("https://onemark.herokuapp.com/php/ext-add-bookmark.php", {
+        let res = await (await fetch("https://onemark.herokuapp.com/php/ext-add-bookmark.php", {
             method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`
-            },
+            headers: { "Authorization": `Bearer ${token}` },
             body: formData
         })).json();
 
-        response.Success ? toast("Success: Bookmark Creation", response.BookmarkInfo.Title, "success") : toast("Error: Bookmark Creation", response.Message, "error");
+        res.Success ? toast("Success: Bookmark Creation", res.BookmarkInfo.Title, "success") : toast("Error: Bookmark Creation", res.Message, "error");
     });
 }
 
 /******************************* OPTIONS *******************************/
-export function toggleSetting() {
-    var setting = this.dataset.setting;
-    chrome.storage.sync.get([setting], function(stored) {
-        chrome.storage.sync.set({[setting]: (stored[setting] ? false : true)}, () => toggleSettings([setting]));
+export function toggleContext({contextID, title = contextID, remove = true}) {
+    chrome.storage.sync.get("ContextMenus", stored => {
+        let menus = stored.ContextMenus;
+        if (remove && menus.findIndex(({id}) => id == contextID) > -1) {
+            chrome.contextMenus.remove(contextID);
+            menus.splice(menus.findIndex(({id}) => id == contextID));
+            chrome.storage.sync.set({"ContextMenus": menus});
+        } else if (!remove && !menus.includes(contextID)) {
+            chrome.contextMenus.create({id: contextID, title: title});
+            menus.push({id: contextID, title: title});
+            chrome.storage.sync.set({"ContextMenus": menus});
+        }
     });
 }
 
-export function toggleSettings(settings) {
-    chrome.storage.sync.get(settings, function(stored) {
-        stored.EnableContext ? chrome.contextMenus.create({id: "createBookmark", title: "Create Bookmark"}) : chrome.contextMenus.remove("createBookmark");
+export function toggleSetting(setting) {
+    setting = setting || event.target.dataset.setting;
+    chrome.storage.sync.get(setting, stored => {
+        let newState = stored[setting] ? false : true;
+        switch (setting) {
+            case "EnableContext":
+                chrome.storage.sync.set({"EnableContext": newState}, () => {
+                    newState ? toggleContext({contextID: "createBookmark", title: "Create Bookmark", remove: false}) : toggleContext({contextID: "createBookmark"});
+                });
+                break;
+        }
     });
 }
