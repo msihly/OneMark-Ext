@@ -8,10 +8,10 @@ chrome.runtime.onInstalled.addListener(details => {
         }
         chrome.storage.sync.set({"EnableContext": defaults.enableContext, "ContextMenus": defaults.contextMenus}, () => {
             chrome.contextMenus.removeAll(() => {
+                chrome.contextMenus.create({id: "openOnemark", title: "Open OneMark", contexts: ["browser_action"]});
                 defaults.contextMenus.forEach(e => chrome.contextMenus.create({id: e.id, title: e.title}))
             });
         });
-        if (details.reason == "install") { chrome.contextMenus.create({id: "openOnemark", title: "Open OneMark", contexts: ["browser_action"]}); }
     });
 });
 

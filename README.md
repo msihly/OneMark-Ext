@@ -3,6 +3,9 @@
 
 ---
 # Changelog
+## Version 1.05 &nbsp;-&nbsp; (2020-05-22)
+* Fixed improper initialization order of 'Open OneMark' browser_action context-menu causing its removal
+
 ## Version 1.04 &nbsp;-&nbsp; (2020-05-22)
 * Updated all JavaScript files to use ES6 consistently, cleanup functions and global scope, and extract common functions
     * Functions and object properties reordered lexicographically
