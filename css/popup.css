@@ -90,11 +90,12 @@ html, body {
 
 .file-input-btn {
     border: 2px solid #ccc;
-	background: none;
-    color: #ccc;
     font-family: "Roboto";
+    font-size: 0.9em;
     font-weight: 500;
     line-height: 1;
+	background: none;
+    color: #ccc;
     white-space: nowrap;
     cursor: pointer;
     transition: all 0.1s;
@@ -144,14 +145,15 @@ html, body {
 .file-input-name {
 	display: inline-block;
 	vertical-align: top;
-	text-align: center;
-	text-overflow: ellipsis;
-    white-space: nowrap;
-    color: #ccc;
     border: 2px solid var(--blue-light);
     border-left: none;
     border-radius: 0 3px 3px 0;
+    font-size: 0.9em;
+    color: #ccc;
+    text-align: center;
+	text-overflow: ellipsis;
     overflow: hidden;
+    white-space: nowrap;
     transition: all 0.1s;
 }
 
