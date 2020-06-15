@@ -46,35 +46,25 @@ export function debounce(fn, delay) {
     }
 }
 
+export function formatDate(dateTime, type = "date") {
+    let [year, month, day, time] = [dateTime.substring(0, 4), dateTime.substring(5, 7), dateTime.substring(8, 10), dateTime.substring(11)];
+    switch (type.toLowerCase()) {
+        case "date": return `${CmnG.months[+month]} ${day}, ${year}`;
+        case "datetime": return `${CmnG.months[+month]} ${day}, ${year} | ${new Date(`1970-01-01T${time}`).toLocaleTimeString({}, {hour: "numeric", minute: "numeric"})}`;
+        case "time": return new Date(`1970-01-01T${time}`).toLocaleTimeString({}, {hour: "numeric", minute: "numeric"});
+    }
+}
+
 export function getRandomInt(min, max, cur = null) {
     let num = Math.floor(Math.random() * (max - min + 1)) + min;
     return (num === cur) ? getRandomInt(min, max, cur) : num;
 }
 
-export function printDate(dateTime, type = "date") {
-    let [year, month, day, time] = [dateTime.substring(0, 4), dateTime.substring(5, 7), dateTime.substring(8, 10), dateTime.substring(11)];
-    switch (type) {
-        case "date": return `${CmnG.months[+month]} ${day}, ${year}`;
-        case "dateTime": return `${CmnG.months[+month]} ${day}, ${year} | ${new Date(`1970-01-01T${time}`).toLocaleTimeString({}, {hour: "numeric", minute: "numeric"})}`;
-        case "time": return new Date(`1970-01-01T${time}`).toLocaleTimeString({}, {hour: "numeric", minute: "numeric"});
-    }
+export function regexEscape(string) {
+    return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
 }
 
 /******************************* NOTIFICATIONS *******************************/
-export function toast(title, message) {
-    let opt = {
-        type: "basic",
-        title: title,
-        message: String(message),
-        iconUrl: "././images/logo-128.png"
-    };
-    chrome.notifications.create(opt, function(id) {
-        setTimeout(function() {
-            chrome.notifications.clear(id);
-        }, 5000);
-    });
-}
-
 export function inlineMessage(position, refNode, text, options = [{"type": "", "duration": 0}]) {
     refNode = document.getElementById(refNode);
     let parentNode = refNode.parentElement,
@@ -105,6 +95,20 @@ export function inlineMessage(position, refNode, text, options = [{"type": "", "
     }
 }
 
+export function toast(title, message) {
+    let opt = {
+        type: "basic",
+        title: title,
+        message: String(message),
+        iconUrl: "././images/logo-128.png"
+    };
+    chrome.notifications.create(opt, function(id) {
+        setTimeout(function() {
+            chrome.notifications.clear(id);
+        }, 3000);
+    });
+}
+
 /******************************* FORM *******************************/
 export function checkErrors(elements) {
     let errors = [];
@@ -117,15 +121,9 @@ export function errorCheck() {
         validity = isValid(this);
 
     if (label === null) { return; }
-    if (!validity.Valid) {
-        this.classList.add("invalid");
-        label.innerHTML = validity.Message;
-        label.classList.remove("invisible");
-    } else {
-        label.classList.add("invisible");
-        label.innerHTML = "Valid";
-        this.classList.remove("invalid");
-    }
+    this.classList.toggle("invalid", !validity.Valid);
+    label.innerHTML = !validity.Valid ? validity.Message : "Valid";
+    label.classList.toggle("invisible", validity.Valid);
 
     return validity.Valid;
 }

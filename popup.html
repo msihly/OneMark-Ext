@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="css/stylesheet.css">
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/popup.css">
         <script src="js/popup.js" type="module"></script>
     </head>
     <body>
-        <div class="container">
-            <div class="preview-output" id="preview" data-href="#">
-                <div class="title" id="preview-title">No Title</div>
-                <img class="image" id="preview-image" src="images/No-Image.jpg">
-            </div>
-            <form id="bk-f" class="max-width pad-ctn-1">
+        <div class="container pad-ctn-1">
+            <figure id="preview" class="preview-output" data-href="#">
+                <img id="preview-image" class="image" src="images/No-Image.jpg">
+                <figcaption id="preview-title" class="title">No Title</figcaption>
+            </figure>
+            <form id="bk-f" class="full-width" enctype="multipart/form-data">
                 <div class="row">
-                    <div class="column bk-left">
-                        <div class="form-group">
-                            <label class="error-label invisible" id="bk-f-url-error">Error</label>
+                    <label for="bk-file-input" id="bk-file-input-group" class="file-input-group">
+                        <span id="file-label" class="file-input-name hidden"></span>
+                        <span id="file-btn" class="file-input-btn"></span>
+                    </label>
+                    <input type="file" name="imageURL" id="bk-file-input" class="file-input" accept="image/png, image/jpeg">
+                    <input type="hidden" name="removeImage" id="bk-file-remove" value="false">
+                </div>
+                <div class="column">
+                    <div class="row">
+                        <label for="bk-f-url" class="lb-title horizontal">Link</label>
+                        <div class="form-group full-width">
                             <input type="text" placeholder="Enter URL" name="pageURL" id="bk-f-url" data-preview="preview" data-attr="data-href" data-invalid-value="#" data-listener="errorCheck inputPreview" required>
-                            <label for="bk-f-url" class="lb-title">URL</label>
-                        </div>
-                        <div class="form-group">
-                            <label class="error-label invisible" id="bk-f-title-error">Error</label>
-                            <input type="text" placeholder="Enter Title" name="title" id="bk-f-title" data-preview="preview-title" data-attr="innerHTML" data-invalid-value="No Title" data-listener="errorCheck inputPreview" required>
-                            <label for="bk-f-title" class="lb-title">Title</label>
+                            <label class="error-label invisible" id="bk-f-url-error">Error</label>
                         </div>
                     </div>
-                    <div class="column bk-right">
+                    <div class="row">
+                        <label for="bk-f-title" class="lb-title horizontal">Title</label>
+                        <div class="form-group full-width">
+                            <input type="text" placeholder="Enter Title" name="title" id="bk-f-title" data-preview="preview-title" data-attr="innerHTML" data-invalid-value="No Title" data-listener="errorCheck inputPreview" required>
+                            <label class="error-label invisible" id="bk-f-title-error">Error</label>
+                        </div>
+                    </div>
+                    <div class="column tag-group">
                         <div class="row">
                             <input type="text" placeholder="Tags" id="tag-search" class="placeholder tag-search">
                             <span class="tag-search-btn" id="tag-btn" data-listener="tag-btn"></span>
@@ -32,7 +43,7 @@
                         <div class="tags" id="tags"></div>
                     </div>
                 </div>
-                <button class="btn-hollow submit" id="bk-submit" type="submit">SUBMIT</button>
+                <button class="btn-hollow white submit" id="bk-submit" type="submit">SUBMIT</button>
             </form>
         </div>
     </body>

@@ -1,0 +1,154 @@
+/********************* VARIABLES *********************/
+:root {
+    --foreground-color: #000;
+}
+
+/********************* OPTIONS *********************/
+.lg-wrapper {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: #000;
+    background-image: var(--theme-image-wrapper);
+    background-size: cover;
+    transition: 0.3s all;
+}
+
+.lg {
+    display: flex;
+    width: 856px;
+    height: 690px;
+    background: #fff;
+    box-shadow: 0 50px 65px 0 rgba(0, 0, 0, 0.35);
+}
+
+.lg-panel-image {
+    order: 0;
+    width: 416px;
+    height: 100%;
+    background-color: #111;
+    background-image: var(--theme-image-panel);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    box-sizing: border-box;
+    transition: 0.3s all;
+}
+
+.lg-panel-form {
+    order: 1;
+    width: 440px;
+    box-sizing: border-box;
+    transition: 0.2s all;
+}
+
+header {
+    padding: 0.25rem;
+    background-color: #eee;
+    box-shadow: 0 2px 8px 2px #666;
+    text-align: center;
+}
+
+header > h1 {
+    display: inline-flex;
+    align-items: center;
+}
+
+header > h1 > img {
+    max-height: 1.15em;
+}
+
+main {
+    padding: 1rem;
+    margin: 0 auto;
+    max-width: 60rem;
+}
+
+section {
+    margin-bottom: 1rem;
+}
+
+section:not(:nth-of-type(1))::before {
+    content: "";
+    display: block;
+    margin: 1rem 0;
+    border-bottom: 2px solid #666;
+}
+
+.sec-header {
+    color: var(--blue-med);
+    text-align: center;
+}
+
+.sec-col {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+}
+
+.sec-col.center {
+    align-items: center;
+}
+
+.sec-col:not(:nth-of-type(1)) {
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid #666;
+}
+
+.sec-row {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+
+.mg-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fit {
+    width: fit-content;
+}
+
+#login-form {
+    width: 100%;
+    max-width: 20rem;
+    align-items: center;
+    text-align: center;
+}
+
+#login-form input {
+    text-align: center;
+}
+
+.acc {
+    display: flex;
+    justify-content: space-between;
+    width: 15rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #666;
+}
+
+.inline-x {
+    align-self: center;
+    font-size: 1.5em;
+    line-height: 0.5;
+    color: #555;
+    cursor: pointer;
+}
+
+.inline-x:hover {
+    color: rgb(160, 15, 15);
+}
+
+#settings {
+    display: flex;
+    flex-flow: column;
+}

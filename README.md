@@ -3,6 +3,22 @@
 
 ---
 # Changelog
+## Version 1.06 &nbsp;-&nbsp; (2020-06-14)
+* Separated `stylesheet.css` into `common.css` and page-specific stylesheets
+* Redesigned popup UI to match OneMark 1.00 redesign
+* Added Upload / Remove Image form button on popup along with associated functions in `common.js` and `popup.js`
+* Fixed default / new install initialization of context-menus
+* Added and updated functions to `common.js` module
+    * Added `regexEscape(...)` to facilitate tag-search functionality
+    * `printDate(...)` renamed to `formatDate(...)`
+    * `checkErrors(...)` logic condensed
+    * Toast duration reduced from 5s to 3s
+* Updated `login()` in `options.js`
+    * Stored username in the right-side block now updates after successful login
+    * Condensed logic
+* Condensed logic in `removeTag(...)` in `options.js`
+* Fixed tags not properly being displayed after creation or removal in `updateTag()`
+
 ## Version 1.05 &nbsp;-&nbsp; (2020-05-22)
 * Fixed improper initialization order of 'Open OneMark' browser_action context-menu causing its removal
 

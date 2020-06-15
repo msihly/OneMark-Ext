@@ -4,7 +4,7 @@ chrome.runtime.onInstalled.addListener(details => {
     chrome.storage.sync.get(["EnableContext", "ContextMenus"], stored => {
         let defaults = {
             enableContext: stored.EnableContext === undefined ? true : stored.EnableContext,
-            contextMenus: stored.ContextMenus === undefined ? [] : stored.ContextMenus
+            contextMenus: stored.ContextMenus === undefined ? [{id: "createBookmark", title: "Create Bookmark"}] : stored.ContextMenus
         }
         chrome.storage.sync.set({"EnableContext": defaults.enableContext, "ContextMenus": defaults.contextMenus}, () => {
             chrome.contextMenus.removeAll(() => {

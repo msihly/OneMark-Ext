@@ -5,7 +5,15 @@ const PopG = {
     eventListeners: [{
             "id": "bk-f",
             "eventType": "submit",
-            "function": () => Cmn.createBookmark({"tags": PopG.tags, "imageBlob": PopG.imageBlob})
+            "function": () => Cmn.createBookmark({"tags": PopG.tag.tags, "imageBlob": PopG.form.imageBlob})
+        }, {
+            "id": "bk-file-input",
+            "eventType": "change",
+            "function": uploadFile
+        }, {
+            "id": "bk-file-input-group",
+            "eventType": "click",
+            "function": updateFileInput
         }, {
             "id": "preview",
             "eventType": "click",
@@ -28,33 +36,39 @@ const PopG = {
             "eventType": "input",
             "function": inputPreview
         }],
-    imageBlob: null,
-    inputTitle: "",
-    inputUrl: "",
-    tags: [],
-    tagsCtn: "",
-    tagSearch: ""
+    form: {
+        imageBlob: null,
+        title: "",
+        url: ""
+    },
+    tag: {
+        container: null,
+        search: null
+    },
+    tags: []
 }
 
 document.addEventListener("DOMContentLoaded", function() {
     Cmn.addListeners(PopG.eventListeners);
 
-    PopG.inputUrl = document.getElementById("bk-f-url");
-    PopG.inputTitle = document.getElementById("bk-f-title");
-    PopG.tagSearch = document.getElementById("tag-search");
-    PopG.tagsCtn = document.getElementById("tags");
+    PopG.form.url = document.getElementById("bk-f-url");
+    PopG.form.title = document.getElementById("bk-f-title");
+    PopG.tag.search = document.getElementById("tag-search");
+    PopG.tag.container = document.getElementById("tags");
 
-    fillForm(PopG.inputUrl, PopG.inputTitle, true);
+    fillForm(PopG.form.url, PopG.form.title, true);
 });
 
 /******************************* FORM *******************************/
 function fillForm(inputUrl, inputTitle, withImage) {
-    let [previewURL, previewTitle, previewImage] = document.querySelectorAll("#preview, #preview-title, #preview-image");
+    let [previewURL, previewImage, previewTitle, fileInputGroup, fileLabel] = document.querySelectorAll("#preview, #preview-image, #preview-title, #bk-file-input-group, #file-label");
 
     if (withImage) {
         chrome.tabs.captureVisibleTab({quality: 80}, async function(dataUrl) {
-            PopG.imageBlob = await (await fetch(dataUrl)).blob();
+            PopG.form.imageBlob = await (await fetch(dataUrl)).blob();
             previewImage.src = dataUrl;
+            fileInputGroup.classList.add("del");
+            fileLabel.title = dataUrl;
         });
     } else { previewImage.src = "images/No-Image.jpg"; }
 
@@ -70,6 +84,37 @@ function inputPreview() {
     let preview = document.getElementById(this.dataset.preview);
     if (this.dataset.attr == "innerHTML") { preview.innerHTML = Cmn.isValid(this).Valid ? this.value : this.dataset.invalidValue; }
     else { preview.setAttribute(this.dataset.attr, Cmn.isValid(this).Valid ? this.value : this.dataset.invalidValue); }
+}
+
+function updateFileInput() {
+    if (this.classList.contains("del")) {
+        event.preventDefault();
+        let [preview, fileLabel, fileInput, inputRemove] = document.querySelectorAll("#preview-image, #file-label, #bk-file-input, #bk-file-remove");
+        preview.src = "images/No-Image.jpg";
+        fileLabel.title = fileLabel.innerHTML = "";
+        fileLabel.classList.add("hidden");
+        this.classList.remove("del");
+        fileInput.value = "";
+        inputRemove.value = "true";
+    }
+}
+
+function uploadFile() {
+    let fileName = this.value.split("\\").pop(),
+        [preview, inputGroup, fileLabel, inputRemove] = document.querySelectorAll("#preview-image, #bk-file-input-group, #file-label, #bk-file-remove");
+    inputRemove.value = "false";
+    fileLabel.classList.toggle("hidden", !fileName);
+    fileLabel.title = fileLabel.innerHTML = fileName;
+
+    if (this.files.length > 0) {
+        let reader = new FileReader();
+        reader.onload = e => preview.src = e.target.result;
+        reader.readAsDataURL(this.files[0]);
+        inputGroup.classList.add("del");
+    } else {
+        preview.src = "images/No-Image.jpg";
+        inputGroup.classList.remove("del");
+    }
 }
 
 /******************************* TAGS *******************************/
@@ -89,11 +134,12 @@ function createTag(tagText, tagsCtn) {
     });
 }
 
-function displayTags(arr, hide = true) {
-    arr.forEach(e => {
-        let tag = document.getElementById(`tag-${e}`).classList;
-        hide == true ? tag.add("hidden") : tag.remove("hidden");
-    });
+function createTags(arr, tagsCtn) {
+    arr.forEach(tagText => { createTag(tagText, tagsCtn); });
+}
+
+function displayTags(arr, show = true) {
+    arr.forEach(e => document.getElementById(`tag-${e}`).classList.toggle("hidden", !show));
 }
 
 function removeTag(tagText) {
@@ -106,29 +152,24 @@ function searchTags() {
     let tagBtn = document.getElementById("tag-btn");
     if (this.value.length > 0) {
         let reTag = new RegExp(Cmn.regexEscape(this.value), "i"),
-            tagsActive = PopG.tags.filter(e => { return reTag.test(e); });
+            tagsActive = PopG.tags.filter(e => reTag.test(e)),
+            isIncluded = PopG.tags.includes(this.value);
         displayTags(PopG.tags, false);
         displayTags(tagsActive);
-        if (PopG.tags.includes(this.value)) {
-            tagBtn.classList.remove("add");
-            tagBtn.classList.add("del");
-        } else {
-            tagBtn.classList.remove("del");
-            tagBtn.classList.add("add");
-        }
+        tagBtn.classList.toggle("add", !isIncluded);
+        tagBtn.classList.toggle("del", isIncluded);
     } else {
         displayTags(PopG.tags);
         tagBtn.classList.remove("del", "add");
     }
 }
 
-
 function updateTag() {
-    let input = PopG.tagSearch,
+    let input = PopG.tag.search,
         tagText = input.value;
     if (this.classList.contains("add")) {
         PopG.tags.push(tagText);
-        createTag(tagText, PopG.tagsCtn);
+        createTag(tagText, PopG.tag.container);
         input.value = "";
         this.classList.remove("add");
     } else if (this.classList.contains("del")) {
@@ -136,6 +177,7 @@ function updateTag() {
         input.value = "";
         this.classList.remove("del");
     }
+    displayTags(PopG.tags);
 }
 
 /******************************* BOOKMARKS *******************************/

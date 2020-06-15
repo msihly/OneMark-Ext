@@ -23,15 +23,13 @@ const OptG = {
 document.addEventListener("DOMContentLoaded", function() {
     Cmn.addListeners(OptG.eventListeners);
 
-    chrome.storage.sync.get(["StandardUsername", "IncognitoUsername", "EnableContext"], function(stored) {
+    chrome.storage.sync.get(["StandardUsername", "IncognitoUsername", "EnableContext"], stored => {
         if (stored.StandardUsername) { document.getElementById("acc-standard").innerHTML = stored.StandardUsername; }
         if (stored.IncognitoUsername) { document.getElementById("acc-incognito").innerHTML = stored.IncognitoUsername; }
         document.getElementById("context-enabled").checked = stored.EnableContext ? "checked" : "";
     });
 
-    chrome.extension.isAllowedIncognitoAccess(function(isAllowedAccess) {
-        if (!isAllowedAccess) { document.getElementById("incognito-enabled").checked = ""; }
-    });
+    chrome.extension.isAllowedIncognitoAccess(isAllowedAccess => { if (!isAllowedAccess) { document.getElementById("incognito-enabled").checked = ""; }});
 });
 
 async function login() {
@@ -49,9 +47,10 @@ async function login() {
 
         let res = await (await fetch("https://onemark.herokuapp.com/php/ext-login.php", {method: "POST", body: formData})).json();
         if (res.Success) {
-            if (forIncognito) { chrome.storage.sync.set({IncognitoUsername: username, IncognitoUID: res.UID, IncognitoAuthToken: res.Token}); }
-            else { chrome.storage.sync.set({StandardUsername: username, StandardUID: res.UID, StandardAuthToken: res.Token}); }
-            Cmn.inlineMessage("after", "login", `Account [${username}] set for ${forIncognito ? "Incognito": "Standard"} browsing`, {type: "success", duration: 3000});
+            let type = forIncognito ? "Incognito" : "Standard";
+            chrome.storage.sync.set({[`${type}Username`]: username, [`${type}UID`]: res.UID, [`${type}AuthToken`]: res.Token});
+            document.getElementById(`acc-${type.toLowerCase()}`).innerHTML = username;
+            Cmn.inlineMessage("after", "login", `Account set for ${type}"}`, {type: "success", duration: 3000});
         } else {
             Cmn.inlineMessage("after", "login", res.Message, {type: "error"});
         }
@@ -67,5 +66,5 @@ function logout() {
 function redirExtPage(inlineNode) {
     event.preventDefault();
     Cmn.inlineMessage("after", inlineNode, "Redirecting to extension page...", {type: "info", duration: 1000});
-    setTimeout(function() {chrome.tabs.create({url: `chrome://extensions/?id=${chrome.runtime.id}`})}, 1000);
+    setTimeout(() => chrome.tabs.create({url: `chrome://extensions/?id=${chrome.runtime.id}`}), 1000);
 }

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="css/stylesheet.css">
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/options.css">
         <script src="js/options.js" type="module"></script>
         <title>Options | OneMark Extension</title>
     </head>
@@ -14,22 +15,22 @@
                 <div class="sec-col center">
                     <h2 class="sec-header">Add Account</h2>
                     <form id="login-form" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label class="error-label invisible" id="login-username-error">Error</label>
-                            <input type="text" placeholder="Username" name="username" id="login-username" data-listener="errorCheck" required>
+                        <div class="form-group rev">
+                            <label id="login-username-error" class="error-label invisible">Error</label>
+                            <input id="login-username" class="t-input" type="text" placeholder="Username" name="username" data-listener="errorCheck" required>
                             <label for="login-username" class="lb-title">Username</label>
                         </div>
-                        <div class="form-group">
-                            <label class="error-label invisible" id="login-password-error">Error</label>
-                            <input type="password" placeholder="Password" name="password" id="login-password" data-listener="errorCheck" required>
+                        <div class="form-group rev">
+                            <label id="login-password-error" class="error-label invisible">Error</label>
+                            <input id="login-password" class="t-input" type="password" placeholder="Password" name="password" data-listener="errorCheck" required>
                             <label for="login-password" class="lb-title">Password</label>
                         </div>
                         <label class="checkbox-ctn">
-                            <input type="checkbox" name="incognito" id="incognito">
+                            <input id="incognito" type="checkbox" name="incognito">
                             <span class="checkbox"></span>
                             <label for="incognito" class="lb-title checkbox-title">Use Account for Incognito</label>
                         </label>
-                        <button type="submit" class="btn-hollow" id="login" name="login">ADD ACCOUNT</button>
+                        <button id="login" class="btn-hollow" type="submit" name="login">ADD ACCOUNT</button>
                     </form>
                 </div>
                 <div class="sec-col">
@@ -52,12 +53,12 @@
                 <h2 class="sec-header">Settings</h2>
                 <div id="settings" class="mg-center fit">
                     <label id="setting-incognito" class="checkbox-ctn">
-                        <input type="checkbox" id="incognito-enabled" checked disabled>
+                        <input id="incognito-enabled" type="checkbox" checked disabled>
                         <span class="checkbox"></span>
-                        <label class="lb-title checkbox-title">Extension Enabled in Incognito (<i>Option Controlled via <a href="#" id="redir-incognito">Extensions</a> Page</i>)</label>
+                        <label class="lb-title checkbox-title">Extension Enabled in Incognito (<i>Option Controlled via <span id="redir-incognito" class="text-btn">Extensions</span> Page</i>)</label>
                     </label>
                     <label id="setting-context" class="checkbox-ctn">
-                        <input type="checkbox" id="context-enabled" data-listener="toggle" data-setting="EnableContext" checked>
+                        <input id="context-enabled" type="checkbox" data-listener="toggle" data-setting="EnableContext" checked>
                         <span class="checkbox"></span>
                         <label class="lb-title checkbox-title">Enable Context-Menu</label>
                     </label>
