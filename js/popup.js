@@ -5,7 +5,7 @@ const PopG = {
     eventListeners: [{
             "id": "bk-f",
             "eventType": "submit",
-            "function": () => Cmn.createBookmark({"tags": PopG.tag.tags, "imageBlob": PopG.form.imageBlob})
+            "function": () => Cmn.createBookmark({"tags": PopG.tags, "imageBlob": PopG.form.imageBlob})
         }, {
             "id": "bk-file-input",
             "eventType": "change",

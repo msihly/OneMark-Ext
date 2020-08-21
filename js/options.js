@@ -45,14 +45,14 @@ async function login() {
             return Cmn.inlineMessage("after", "login", `Account already in use for ${forIncognito ? "Incognito": "Standard"}`, {type: "error"});
         }
 
-        let res = await (await fetch("https://onemark.herokuapp.com/php/ext-login.php", {method: "POST", body: formData})).json();
-        if (res.Success) {
+        let res = await (await fetch("https://onemark.herokuapp.com/api/ext/user/login", {method: "POST", body: formData})).json();
+        if (res.success) {
             let type = forIncognito ? "Incognito" : "Standard";
-            chrome.storage.sync.set({[`${type}Username`]: username, [`${type}UID`]: res.UID, [`${type}AuthToken`]: res.Token});
+            chrome.storage.sync.set({[`${type}Username`]: username, [`${type}UID`]: res.userId, [`${type}AuthToken`]: res.token});
             document.getElementById(`acc-${type.toLowerCase()}`).innerHTML = username;
             Cmn.inlineMessage("after", "login", `Account set for ${type}"}`, {type: "success", duration: 3000});
         } else {
-            Cmn.inlineMessage("after", "login", res.Message, {type: "error"});
+            Cmn.inlineMessage("after", "login", res.message, {type: "error"});
         }
     });
 }

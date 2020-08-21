@@ -130,8 +130,8 @@ section:not(:nth-of-type(1))::before {
 .acc {
     display: flex;
     justify-content: space-between;
-    width: 15rem;
-    margin-bottom: 0.5rem;
+    width: 12rem;
+    margin-bottom: 1.5rem;
     font-weight: 500;
     color: #666;
 }

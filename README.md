@@ -1,8 +1,20 @@
 # OneMark Add-On Extension for Chrome
-### The [OneMark Add-On](https://chrome.google.com/webstore/detail/cjklnajnighcegajggjfmjecfidllinm) is a companion Google Chrome extension for the visual-bookmark organizer [OneMark](https://onemark.herokuapp.com). The extension provides the ability to quickly create bookmarks of any page, including a screenshot of the active tab. The extension also supports the usage of 2 different accounts for Standard and Incognito browsing to quickly and seamlessly add bookmarks to the correct account.
+### The [OneMark Add-On](https://chrome.google.com/webstore/detail/cjklnajnighcegajggjfmjecfidllinm) is a companion Google Chrome extension for the visual-bookmark organizer [OneMark](https://onemark.herokuapp.com). The extension provides the ability to quickly create bookmarks of any page, including a screenshot of the active tab. The extension also supports the usage of 2 different accounts for Standard and Incognito browsing to seamlessly add bookmarks to an alternate account.
 
 ---
 # Changelog
+## Version 1.09 &nbsp;-&nbsp; (2020-08-18)
+* Fixed development artifact referring to localhost instead of live website in `uploadBookmark(...)` AJAX request
+
+## Version 1.08 &nbsp;-&nbsp; (2020-08-16)
+* Updated AJAX requests to use new OneMark API endpoints
+* Updated variable and DOM identifier naming schema to match changes in OneMark codebase
+
+## Version 1.07 &nbsp;-&nbsp; (2020-06-26)
+* Fixed tags not being properly appended to the bookmark when using the popup
+* Fixed invisible inline messages caused by incorrect CSS variable reference
+* Minor style updates
+
 ## Version 1.06 &nbsp;-&nbsp; (2020-06-14)
 * Separated `stylesheet.css` into `common.css` and page-specific stylesheets
 * Redesigned popup UI to match OneMark 1.00 redesign

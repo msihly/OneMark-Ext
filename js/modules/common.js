@@ -132,14 +132,14 @@ export function isValid(element) {
     let re,
         validity = {"Valid": false, "Message": ""};
     switch (element.name) {
-        case "title": case "pageURL": case "email": case "username": case "password": case "password-confirm":
+        case "title": case "pageUrl": case "email": case "username": case "password": case "passwordConfirm":
             if (!element.value) { validity.Message = "Field is required"; return validity; }
     }
     switch (element.name) {
         case "title":
             if (element.value.length > 255) { validity.Message = "Title cannot be more than 255 characters"; return validity; }
             break;
-        case "pageURL":
+        case "pageUrl":
             re = /^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/;
             if (element.value.length > 2083) { validity.Message = "Page URL cannot be more than 2083 characters"; return validity; }
             else if (!re.test(element.value)) { validity.Message = "Invalid URL"; return validity; }
@@ -153,16 +153,16 @@ export function isValid(element) {
             if (element.value.length > 40) { validity.Message = "Username cannot be more than 40 characters"; return validity; }
             break;
         case "password":
-        case "password-new":
+        case "newPassword":
             if (element.value.length < 8) { validity.Message = "Password must be a minimum of 8 characters"; return validity; }
             let passConf = document.getElementById(`${element.id}-confirm`);
             if (passConf) { errorCheck.call(passConf); }
             if (element.id == "pass-new") {
-                let passCur = document.getElementById("pass-cur");
+                let passCur = document.getElementById("currentPassword");
                 if (element.value === passCur.value) { validity.Message = "New password cannot match current password"; return validity; }
             }
             break;
-        case "password-confirm":
+        case "passwordConfirm":
             let pass = document.getElementById(element.id.substring(0, element.id.indexOf("-confirm")));
             if (element.value !== pass.value) { validity.Message = "Passwords do not match"; return validity; }
             break;
@@ -181,16 +181,17 @@ export async function createBookmark({isContext = false, tags = [], imageBlob = 
         if (isContext) {
             let formData = new FormData();
             formData.append("title", tabs[0].title);
-            formData.append("pageURL", tabs[0].url);
+            formData.append("pageUrl", tabs[0].url);
+            formData.append("tags", JSON.stringify(tags));
             chrome.tabs.captureVisibleTab({quality: 80}, async function(dataUrl) {
-                formData.append("imageURL", await (await fetch(dataUrl)).blob(), `${tabs[0].title}.jpg`);
+                formData.append("imageUrl", await (await fetch(dataUrl)).blob(), `${tabs[0].title}.jpg`);
                 uploadBookmark(formData, isIncognito);
             });
         } else {
             if (!checkErrors([...e.target.elements])) { return toast("Error: Bookmark Creation", "Errors in form fields", "error"); }
             let formData = new FormData(e.target);
             formData.append("tags", JSON.stringify(tags));
-            formData.append("imageURL", imageBlob, `${formData.get("title")}.jpg`);
+            formData.append("imageUrl", imageBlob, `${formData.get("title")}.jpg`);
             uploadBookmark(formData, isIncognito);
         }
     });
@@ -201,13 +202,13 @@ export async function uploadBookmark(formData, isIncognito) {
         let token = isIncognito ? stored.IncognitoAuthToken : stored.StandardAuthToken;
         if (!token) { return toast("Error: Authentication", `No account set for ${isIncognito ? "Incognito" : "Standard"} browsing`, "error"); }
 
-        let res = await (await fetch("https://onemark.herokuapp.com/php/ext-add-bookmark.php", {
+        let res = await (await fetch("https://onemark.herokuapp.com/api/ext/bookmark", {
             method: "POST",
             headers: { "Authorization": `Bearer ${token}` },
             body: formData
         })).json();
 
-        res.Success ? toast("Success: Bookmark Creation", res.BookmarkInfo.Title, "success") : toast("Error: Bookmark Creation", res.Message, "error");
+        res.success ? toast("Success: Bookmark Creation", res.bookmark.title, "success") : toast("Error: Bookmark Creation", res.message, "error");
     });
 }
 
