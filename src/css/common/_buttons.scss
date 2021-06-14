@@ -1,0 +1,89 @@
+button {
+    border: none;
+    border-radius: 0.6em;
+    margin: 0.4rem 0;
+    padding: 0.5em 0.6em;
+    width: fit-content;
+    background-color: var(--accent-color);
+    color: $white-3;
+    font-family: "Roboto";
+    font-size: 1em;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:not(:last-of-type) { margin-right: 0.3rem; }
+
+    &:hover { filter: brightness(1.2); }
+}
+
+.submit {
+    align-self: center;
+    border-radius: 0.5em;
+    background: linear-gradient(to top, $blue-1, $blue-3);
+
+    &:hover {
+        background: linear-gradient(to top, $blue-1, $blue-3);
+        color: white;
+        filter: brightness(1.2);
+    }
+
+    &.plus {
+        margin-left: 0.5rem;
+        padding: 0.4em 0.6em;
+        height: fit-content;
+
+        &.small-labels { margin-top: 0; }
+    }
+}
+
+.gradient-button {
+    &, &:hover { background-image: linear-gradient(to top, transparent 30%, rgba($white-1, 0.35)); }
+
+    &:hover { filter: brightness(1.2); }
+}
+
+.circle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    padding: 0.3em;
+    background-color: var(--accent-color);
+    color: $white-3;
+
+    &.disabled {
+        background-color: rgba($grey-1, 0.5);
+        cursor: not-allowed;
+    }
+}
+
+.add-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.5em;
+    padding: 0 0.2em;
+    background-color: var(--accent-color);
+    color: var(--accent-fill-color);
+    fill: var(--accent-fill-color);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover { filter: brightness(1.2); }
+
+    svg { padding: 0.2em; }
+}
+
+.text-btn {
+    color: var(--accent-color-highlight);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        text-shadow: 0 0 0.4em;
+        filter: brightness(1.2);
+    }
+
+    &.i { font-style: italic; }
+}

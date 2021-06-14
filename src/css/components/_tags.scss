@@ -1,0 +1,107 @@
+.tag {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem;
+    font-weight: 500;
+    color: $grey-5;
+
+    &:hover {
+        background-color: $black-2;
+        color: $white-1;
+    }
+
+    &s {
+        height: 4.75rem;
+        border: 2px solid $black-3;
+        border-top: 0;
+        border-radius: 0 0 4px 4px;
+        background-color: $black-2;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar { width: 6px; }
+    }
+
+    &-group { margin: 0; }
+
+    &-search-label {
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+
+    &-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &-x {
+        align-self: center;
+        font-size: 24px;
+        line-height: 0.5;
+        color: $white-1;
+        cursor: pointer;
+
+        &:hover { color: $red-2; }
+    }
+
+    &-count {
+        align-self: center;
+        border-radius: 4px;
+        padding: 0.1em 0.3em;
+        background-color: $blue-1;
+        color: $white-1;
+        font-size: 0.9em;
+    }
+
+    &-search {
+        flex-grow: 1;
+        margin: 0 !important;
+        width: calc(100% - 34px);
+        border: 2px solid $black-3;
+        border-right: 1px solid $black-2;
+        border-radius: 4px 0 0 0;
+        outline: none;
+
+        &-btn {
+            padding: 0.2rem 0.6rem;
+            border-left: 0 !important;
+            border-radius: 0 4px 0 0;
+            font-size: 24px;
+            background-color: $black-3;
+            color: $white-1;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+
+            &::before {
+                content: $symbol-bullet;
+                display: inline-block;
+                width: 0.5em;
+                transition: transform 0.1s ease-in-out;
+            }
+
+            &:hover {
+                background-color: rgba(white, 0.1);
+                color: white;
+            }
+
+            &.add {
+                &::before {
+                    content: $symbol-multiply;
+                    transform: rotate(45deg);
+                }
+
+                &:hover { background-color: $blue-3; }
+            }
+
+            &.del {
+                &::before {
+                    content: $symbol-multiply;
+                    transform: rotate(0deg);
+                }
+
+                &:hover { background-color: $red-3; }
+            }
+        }
+    }
+}

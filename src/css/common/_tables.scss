@@ -1,0 +1,49 @@
+table {
+    border-collapse: collapse;
+    font-weight: 400;
+}
+
+th, td { padding: 0.35em; }
+
+td.currency {
+    position: relative;
+    padding-left: 1.5em !important;
+    text-align: right;
+
+    &::before {
+        content: "$";
+        position: absolute;
+        left: 0.5em;
+    }
+}
+
+.table-vert {
+    tbody > tr > th {
+        text-align: left;
+    }
+
+    &.right > tbody > tr {
+        > th {
+            text-align: right;
+            padding-right: 0.5em;
+        }
+
+        > td { padding-left: 0.5em; }
+    }
+}
+
+.negative {
+    &, p, span {
+        color: $red-2;
+
+        .highlighted & { color: $red-3; }
+    }
+}
+
+.positive {
+    &, p, span {
+        color: $green-2;
+
+        .highlighted & { color: $green-3; }
+    }
+}

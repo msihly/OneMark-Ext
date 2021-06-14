@@ -1,4 +1,25 @@
+# dependencies
+*node_modules
+/.pnp
+.pnp.js
 
-samples/
+# testing
+/coverage
+.old/
+.ignore*
+dist/
+
+# production
+build/
+
+# misc
+.DS_Store
+*.env
+*.env.*
+npm-debug.log*
+.vscode/
+*.psd
+*.ai
 *.db
+_components/
 *.zip

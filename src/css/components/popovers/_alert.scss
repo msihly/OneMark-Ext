@@ -1,0 +1,78 @@
+.alert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: inherit;
+    padding-right: inherit;
+    max-width: inherit;
+    overflow: auto;
+
+    &-icon {
+        height: 4rem;
+        width: 4rem;
+        margin-bottom: 1rem;
+        overflow: visible;
+
+        .large & {
+            width: 8rem;
+            height: 8rem;
+        }
+    }
+
+    &-heading, &-subheading { padding-bottom: 0.5em; }
+
+    &-heading {
+        font-size: 1.2em;
+        font-weight: 500;
+        color: white;
+
+        .large & { font-size: 1.6em; }
+    }
+
+    &-subheading {
+        font-weight: 400;
+        color: $white-2;
+
+        .large & { font-size: 1.1em; }
+    }
+
+    &-button {
+        @extend button;
+
+        &.red {
+            background-color: $red-2;
+
+            &:hover {
+                color: white;
+                background-color: $red-3;
+            }
+        }
+
+        &.grey {
+            background-color: $grey-3;
+
+            &:hover { background-color: $grey-5; }
+        }
+
+        .large & {
+            font-size: 1.2em;
+            font-weight: 400;
+        }
+    }
+
+    .column, .row {
+        padding: inherit;
+        max-width: inherit;
+    }
+
+    .scroll-h { width: 100%; }
+
+    .table-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: inherit;
+        max-width: inherit;
+        max-height: 15rem;
+    }
+}

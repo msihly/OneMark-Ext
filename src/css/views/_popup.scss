@@ -1,0 +1,11 @@
+.popup {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    background-color: var(--background-color);
+    font-weight: 600;
+    overflow-x: hidden;
+}
+
+@import "../components/bookmark";
+@import "../components/tags";

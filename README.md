@@ -3,6 +3,9 @@
 
 ---
 # Changelog
+## Version 2.00 &nbsp;-&nbsp; (2021-06-14)
+* **Final update to changelog. Check commit diffs moving forward for revision analysis.**
+
 ## Version 1.09 &nbsp;-&nbsp; (2020-08-18)
 * Fixed development artifact referring to localhost instead of live website in `uploadBookmark(...)` AJAX request
 

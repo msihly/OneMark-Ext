@@ -1,0 +1,145 @@
+.floating-menu {
+    position: absolute;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    z-index: 10;
+
+    &.top {
+        top: 1rem;
+
+        &.hasPadding { padding-top: 0.5rem; }
+    }
+
+    &.bottom {
+        bottom: 1rem;
+
+        &.hasPadding { padding-bottom: 0.5rem; }
+    }
+
+    &.left {
+        left: 1rem;
+
+        &.hasPadding { padding-left: 0.5rem; }
+
+        @keyframes slideIn {
+            0% { left: 75%; }
+            100% { left: 115%; }
+        }
+    }
+
+    &.right {
+        right: 1rem;
+
+        &.hasPadding { padding-right: 0.5rem; }
+
+        @keyframes slideIn {
+            0% { right: 75%; }
+            100% { right: 115%; }
+        }
+    }
+
+    &.horizontal {
+        margin: 0 auto;
+        flex-direction: row;
+
+        .circle-button:not(:last-of-type) {
+            margin-right: 0.5rem;
+            margin-bottom: 0;
+        }
+
+        &.top {
+            @keyframes slideIn {
+                0% { top: 75%; }
+                100% { top: 115%; }
+            }
+        }
+
+        &.bottom {
+            @keyframes slideIn {
+                0% { bottom: 75%; }
+                100% { bottom: 115%; }
+            }
+        }
+    }
+
+    &.has-bg {
+        border-radius: 2.5rem;
+        padding: 0.8rem;
+        width: fit-content;
+        background-color: var(--background-color);
+    }
+
+    .circle-button {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        width: 3.5rem;
+        height: 3.5rem;
+        background-color: var(--accent-color);
+        color: var(--accent-fill-color);
+        fill: var(--accent-fill-color);
+        cursor: pointer;
+        user-select: none;
+        transition: 0.2s all ease-in-out;
+
+        &:hover {
+            background-color: var(--accent-color-highlight);
+
+            &::after {
+                content: attr(title);
+                position: absolute;
+                padding: 0.3em 0.4em;
+                border-radius: 0.4rem;
+                width: max-content;
+                background-color: var(--accent-color);
+                color: var(--accent-fill-color);
+                font-weight: 400;
+                animation: slideIn 0.3s ease-out forwards;
+            }
+        }
+
+        &:not(:last-of-type) { margin-bottom: 0.5rem; }
+
+        &.inactive { filter: brightness(0.5) saturate(0.5); }
+
+        &.red {
+            background-color: $red-2;
+            color: $white-3;
+            fill: $white-3;
+
+            &:hover {
+                background-color: $red-3;
+
+                &::after {
+                    background-color: $red-2;
+                    color: $white-3;
+                }
+            }
+        }
+
+        &.grey {
+            background-color: $grey-1;
+            color: $white-3;
+            fill: $white-3;
+
+            &:hover {
+                background-color: $grey-3;
+
+                &::after {
+                    background-color: $grey-2;
+                    color: $white-3;
+                }
+            }
+        }
+
+        img {
+            width: 1.2rem;
+            filter: invert(1);
+        }
+
+        span { font-size: 1.8em; }
+    }
+}

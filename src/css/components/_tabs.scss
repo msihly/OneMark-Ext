@@ -1,0 +1,111 @@
+.tab {
+    &-container {
+        height: inherit;
+
+        .tab-content { height: inherit; }
+    }
+
+    &-buttons {
+        align-self: flex-start;
+
+        &.column { height: 100%; }
+
+        &.row {
+            width: 100%;
+            overflow-x: auto;
+
+            &::before, &::after {
+                content: "";
+                flex: 1;
+            }
+        }
+
+        &.chips .tab-button {
+            border: 0;
+            border-radius: 1em;
+            margin: 0.8em 0;
+            padding: 0.3em 0.8em;
+            background-color: var(--foreground-color);
+
+            &:not(:last-of-type) { margin-right: 0.4em; }
+
+            &:hover { background-color: var(--foreground-color-highlight); }
+
+            &.active {
+                background-color: var(--accent-color);
+
+                &:hover { background-color: var(--accent-color-highlight); }
+            }
+        }
+    }
+
+    &-button {
+        padding: 1em;
+        border: 3px solid transparent;
+        font-weight: 400;
+        color: var(--text-color);
+        text-align: center;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease-in-out;
+
+        &:hover { background-color: var(--foreground-color-highlight); }
+
+        @media #{$media-500-wh} { padding: 0.5em; }
+
+        &.active {
+            @media #{$media-500-wh} { max-width: fit-content; }
+
+            .column > & { border-left-color: var(--accent-color); }
+
+            .row > & { border-bottom-color: var(--accent-color); }
+        }
+
+
+    }
+
+    &-content {
+        display: flex;
+        flex-direction: column;
+        width: stretch;
+        overflow: auto;
+
+        &.center {
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        &.end { align-items: flex-end; }
+
+        &.start { align-items: flex-start; }
+    }
+}
+
+.side-scroller {
+    scroll-behavior: smooth;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar { display: none; }
+}
+
+.scroll {
+    &-left, &-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin: auto 0.5rem;
+        padding: 0.4rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        background-color: var(--accent-color);
+        fill: var(--accent-fill-color);
+        cursor: pointer;
+
+        &:hover { background-color: var(--accent-color-highlight); }
+    }
+
+    &-left { transform: rotate(180deg); }
+}
