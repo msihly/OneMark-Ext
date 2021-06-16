@@ -32,7 +32,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
                 const imageBlob = await(await fetch(await chrome.tabs.captureVisibleTab({ quality: 80 }))).blob();
                 formData.append("file", imageBlob, `${tabs[0].title}.jpg`);
 
-                const res = await (await fetch("http://localhost:3000/api/bookmark", {
+                const res = await (await fetch("https://onemark.herokuapp.com/api/bookmark", {
                     method: "POST",
                     body: formData,
                     headers: { "Authorization": `Bearer ${stored[accessKey]} ${stored[refreshKey]}` }

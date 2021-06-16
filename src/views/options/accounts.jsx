@@ -16,7 +16,7 @@ const Accounts = ({ standardUsername, setStandardUsername, incognitoUsername, se
                 return toast.error(`Account already in use for ${type}`);
             }
 
-            const res = await (await fetch("http://localhost:3000/api/user/login", { method: "POST", body: formData })).json();
+            const res = await (await fetch("https://onemark.herokuapp.com/api/user/login", { method: "POST", body: formData })).json();
             if (!res?.success) return toast.error(res.message);
 
             chrome.storage.sync.set({ [`${type}Username`]: username, [`${type}AccessToken`]: res.accessToken, [`${type}RefreshToken`]: res.refreshToken });

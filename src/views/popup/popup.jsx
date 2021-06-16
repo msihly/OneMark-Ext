@@ -40,7 +40,7 @@ const Popup = () => {
 
             formData.append("tags", JSON.stringify(tags));
             formData.append("file", await dataUrlToBlob(imageUrl), `${title}.jpg`);
-            const res = await (await fetch("http://localhost:3000/api/bookmark", {
+            const res = await (await fetch("https://onemark.herokuapp.com/api/bookmark", {
                 method: "POST",
                 body: formData,
                 headers: { "Authorization": `Bearer ${stored[`${keyPrefix}AccessToken`]} ${stored[`${keyPrefix}RefreshToken`]}` }
