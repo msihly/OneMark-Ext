@@ -1,6 +1,6 @@
 {
 	"name": "onemark-ext",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "Chrome extension for OneMark",
 	"scripts": {
 		"start": "react-app-rewired start",

@@ -1,3 +1,5 @@
+const SITE_URL = "https://onemark.herokuapp.com";
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.get(["EnableContext", "ContextMenus"], stored => {
         const enableContext = stored.EnableContext ?? true;
@@ -35,7 +37,7 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
                 const imageBlob = await(await fetch(await chrome.tabs.captureVisibleTab({ quality: 80 }))).blob();
                 formData.append("file", imageBlob, `${tabs[0].title}.jpg`);
 
-                const res = await (await fetch("http://localhost:3000/api/bookmark", {
+                const res = await (await fetch(`${SITE_URL}/api/bookmark`, {
                     method: "POST",
                     body: formData,
                     headers: { "Authorization": `Bearer ${stored[accessKey]} ${stored[refreshKey]}` }
@@ -47,5 +49,5 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
         });
     }
 
-    if (menuItemId === "openOnemark") chrome.tabs.create({ url: "https://onemark.herokuapp.com" });
+    if (menuItemId === "openOnemark") chrome.tabs.create({ url: SITE_URL });
 });
