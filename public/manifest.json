@@ -1,6 +1,6 @@
 {
     "name": "OneMark",
-    "version": "2.00",
+    "version": "2.11",
     "description": "Add-on for OneMark",
     "manifest_version": 3,
     "icons": {

@@ -1,23 +1,29 @@
 /* global chrome */
-import React from "react";
+import React, { useContext } from "react";
 import { toast } from "react-toastify";
 import { Checkbox, Form, Input } from "components/form";
+import { OptionsContext } from "./options";
 import * as Media from "media";
 
-const Accounts = ({ standardUsername, setStandardUsername, incognitoUsername, setIncognitoUsername }) => {
+const Accounts = () => {
+    const { standardUsername, setStandardUsername, incognitoUsername, setIncognitoUsername } = useContext(OptionsContext);
+
     const handleLoginSubmit = async (formData) => {
         const username = formData.get("username");
-        const forIncognito = formData.get("isForIncognito");
+        const forIncognito = Boolean(formData.get("isForIncognito"));
         const type = forIncognito ? "Incognito" : "Standard";
         formData.append("isFromExtension", true);
 
-        chrome.storage.sync.get(["StandardUsername", "IncognitoUsername"], async (stored) => {
-            if ((username === stored.StandardUsername && !forIncognito) || (username === stored.IncognitoUsername && forIncognito)) {
-                return toast.error(`Account already in use for ${type}`);
-            }
+        chrome.storage.sync.get(null, async (stored) => {
+            const isInUseForStandard = username === stored.StandardUsername && forIncognito;
+            const isInUseForIncognito = username === stored.IncognitoUsername && !forIncognito;
+
+            if (isInUseForStandard || isInUseForIncognito) return toast.error(`Account already in use for ${isInUseForStandard ? "Standard" : "Incognito"}`);
 
             const res = await (await fetch("https://onemark.herokuapp.com/api/user/login", { method: "POST", body: formData })).json();
             if (!res?.success) return toast.error(res.message);
+
+            console.log({ res, type });
 
             chrome.storage.sync.set({ [`${type}Username`]: username, [`${type}AccessToken`]: res.accessToken, [`${type}RefreshToken`]: res.refreshToken });
             forIncognito ? setIncognitoUsername(username) : setStandardUsername(username);
@@ -51,7 +57,7 @@ const Accounts = ({ standardUsername, setStandardUsername, incognitoUsername, se
 const Account = ({ type, username = null, updateUsername }) => {
     const logout = () => {
         if (!username) return toast.warning("No account to delete")
-        chrome.storage.sync.remove([`${type}Username`, `${type}UID`, `${type}AuthToken`]);
+        chrome.storage.sync.remove([`${type}Username`, `${type}AccessToken`, `${type}RefreshToken`]);
         updateUsername?.(null);
     };
 

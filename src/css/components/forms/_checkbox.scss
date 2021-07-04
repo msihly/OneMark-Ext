@@ -9,7 +9,7 @@
     input {
         position: absolute;
         margin: 0;
-        width: 100% !important;
+        width: auto;
         height: 1.2em;
         opacity: 0;
         cursor: pointer;
@@ -41,6 +41,8 @@
         border-color: transparent;
         background: $theme-gradient;
     }
+
+    &.disabled .checkbox { background: linear-gradient(to top, $grey-1, $grey-3); }
 
     .multi-checkboxes &:not(:last-child) { margin-right: 0.75rem; }
 }

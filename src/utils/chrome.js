@@ -25,9 +25,10 @@ export const toggleContext = ({ id, title, hasRemove = true }) => {
 export const toggleSetting = (setting) => {
     chrome.storage.sync.get(setting, stored => {
         const newState = stored[setting] ? false : true;
+
         if (setting === "EnableContext") {
             chrome.storage.sync.set({ "EnableContext": newState }, () => {
-                toggleContext(newState ? { id: "createBookmark", title: "Create Bookmark", remove: false } : { id: "createBookmark" });
+                toggleContext(newState ? { id: "createBookmark", title: "Create Bookmark", hasRemove: false } : { id: "createBookmark" });
             });
         }
     });

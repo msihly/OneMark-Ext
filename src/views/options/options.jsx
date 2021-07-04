@@ -1,6 +1,7 @@
 /* global chrome */
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import Loading from "../loading";
 import Accounts from "./accounts";
 import Settings from "./settings";
 import * as Media from "media";
@@ -19,7 +20,11 @@ toast.configure({
     toastClassName: "Toastify__toast--dark"
 });
 
+export const OptionsContext = createContext();
+
 const Options = () => {
+    const [isLoading, setIsLoading] = useState(true);
+
     const [standardUsername, setStandardUsername] = useState(null);
     const [incognitoUsername, setIncognitoUsername] = useState(null);
 
@@ -33,10 +38,12 @@ const Options = () => {
             setStandardUsername(stored.StandardUsername ?? null);
             setIncognitoUsername(stored.IncognitoUsername ?? null);
             setIsContextEnabled(stored.EnableContext ?? true);
+
+            setIsLoading(false);
         });
     }, []);
 
-    return (
+    return isLoading ? <Loading /> : (
         <div className="common options">
             <header>
                 <img src={Media.LogoMedium} alt="OneMark logo" />
@@ -44,8 +51,10 @@ const Options = () => {
             </header>
 
             <main>
-                <Accounts {...{ standardUsername, setStandardUsername, incognitoUsername, setIncognitoUsername }} />
-                <Settings {...{ hasIncognitoAccess, isContextEnabled }} />
+                <OptionsContext.Provider value={{ hasIncognitoAccess, isContextEnabled, standardUsername, setStandardUsername, incognitoUsername, setIncognitoUsername }}>
+                    <Accounts />
+                    <Settings />
+                </OptionsContext.Provider>
             </main>
         </div>
     );
